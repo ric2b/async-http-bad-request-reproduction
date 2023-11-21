@@ -29,7 +29,12 @@ RSpec.describe Async::Http::Bad::Request::Reproduction do
   end
 
   context "without webmock" do
-    before { WebMock.disable! }
+    around do |test|
+      WebMock.disable!
+      test.run
+    ensure
+      WebMock.enable!
+    end
 
     context "with the default Faraday adapter" do
       let(:connection) { Faraday.new }
@@ -56,13 +61,18 @@ RSpec.describe Async::Http::Bad::Request::Reproduction do
 
       it "does not throw a bad request error" do
         Sync do
-          expect(connection.get(url).body).to eq body
+          expect(connection.get(url).read).to eq body
         end
       end
     end
 
     context "without webmock" do
-      before { WebMock.disable! }
+      around do |test|
+        WebMock.disable!
+        test.run
+      ensure
+        WebMock.enable!
+      end
 
       it "does not throw a bad request error" do
         Sync do
