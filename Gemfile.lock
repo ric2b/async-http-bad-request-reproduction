@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     async-http-bad-request-reproduction (0.1.0)
+      async-http
       async-http-faraday
 
 GEM
